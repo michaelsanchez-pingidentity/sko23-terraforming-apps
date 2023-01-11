@@ -15,6 +15,27 @@ Everything needed for this is contained in this repo:
 
 The HCL contains resources for PingOne and for k8s. K8s is used to deploy the application image with an associated Ingress to allow browser access to the container.
 
+#### Providers
+
+The Terraform here uses multiple providers:
+
+| Provider | Description |
+| --- | --- |
+| **PingOne** | PingOne Environment \ Services configuration |
+| **Kubernetes** | Configure k8s infrastructure components |
+
+#### Terraform Resources
+
+This is what the HCL will create
+
+| Provider | Resource | Description |
+| --- | --- | --- |
+| PingOne | Environment | Contains all the P1 configuration for the app |
+| PingOne | Application | OIDC App used by the app |
+| PingOne | Resource Grant | Assigns resources \ scopes to the OIDC App |
+
+
+
 #### Variables
 
 Create a `terraform.tfvars` file with the following:
@@ -27,6 +48,7 @@ admin_user_id = "{{adminUserId}}"
 worker_id = "{{workerId}}"
 worker_secret = "{{workerSecret}}"
 deploy_name = "SKO2023 - BXRTerraform"
+k8s_deploy_name = "{{Name used for K8s deployment}}"
 namespace = "{{k8s namespace}}"
 env_type = "dev"
 ```
@@ -38,5 +60,12 @@ At a command line:
 ```zsh
 terraform init
 terraform plan
-terraform apply —auto-approve
 ```
+
+If the plan fails - check your `terraform.tfvars` values. 
+
+If the plan succeeds:
+
+```hcl
+terraform apply —auto-approve
+````

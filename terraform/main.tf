@@ -12,7 +12,7 @@ module "environment" {
   create_authorize = true
   create_davinci = true
   create_risk = true
-  license_name = "INTERNAL"
+  license_name = var.license_name
   organization_id = var.organization_id
 }
 
@@ -27,31 +27,6 @@ provider "pingone" {
   region                       = var.region
   force_delete_production_type = false
 }
-
-data "pingone_licenses" "internal_license" {
-  organization_id = var.organization_id
-
-  data_filter {
-    name   = "name"
-    values = ["INTERNAL"]
-  }
-
-  data_filter {
-    name   = "status"
-    values = ["ACTIVE"]
-  }
-}
-
-# resource "pingone_environment" "release_environment" {
-#   name        = "${var.deploy_name} - ${var.env_type}"
-#   description = "Created by Terraform"
-#   type        = "SANDBOX"
-#   license_id  = data.pingone_licenses.internal_license.ids[0]
-#   default_population {}
-#   service {
-#     type = "SSO"
-#   }
-# }
 
 resource "pingone_application" "bxr_logon" {
   environment_id = module.environment.environment_id

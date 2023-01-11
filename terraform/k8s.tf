@@ -1,7 +1,7 @@
 resource "kubernetes_ingress_v1" "package_ingress" {
   metadata {
     namespace = var.namespace
-    name      = "${local.k8s_deploy_name}-ingress"
+    name      = "${var.k8s_deploy_name}-ingress"
     annotations = {
       "kubernetes.io/ingress.class"                    = "nginx-public"
       "nginx.ingress.kubernetes.io/backend-protocol"   = "HTTPS"
@@ -13,13 +13,13 @@ resource "kubernetes_ingress_v1" "package_ingress" {
 
   spec {
     rule {
-      host = "${local.k8s_deploy_name}.ping-devops.com"
+      host = "${var.k8s_deploy_name}.ping-devops.com"
       http {
         path {
           path = "/"
           backend {
             service {
-              name = "${local.k8s_deploy_name}-app-service"
+              name = "${var.k8s_deploy_name}-app-service"
               port {
                 number = 5000
               }
@@ -30,7 +30,7 @@ resource "kubernetes_ingress_v1" "package_ingress" {
     }
 
     tls {
-      hosts = ["${local.k8s_deploy_name}.ping-devops.com"]
+      hosts = ["${var.k8s_deploy_name}.ping-devops.com"]
     }
   }
 }
@@ -38,24 +38,24 @@ resource "kubernetes_ingress_v1" "package_ingress" {
 resource "kubernetes_deployment" "bxr_app" {
   metadata {
     namespace = var.namespace
-    name      = "${local.k8s_deploy_name}-app"
+    name      = "${var.k8s_deploy_name}-app"
     labels = {
-      "app.kubernetes.io/name"       = "${local.k8s_deploy_name}-app",
-      "app.kubernetes.io/instance"   = "${local.k8s_deploy_name}-app",
-      "app.kubernetes.io/managed-by" = "${local.k8s_deploy_name}-app"
+      "app.kubernetes.io/name"       = "${var.k8s_deploy_name}-app",
+      "app.kubernetes.io/instance"   = "${var.k8s_deploy_name}-app",
+      "app.kubernetes.io/managed-by" = "${var.k8s_deploy_name}-app"
     }
   }
   spec {
     replicas = 1
     selector {
       match_labels = {
-        app = "${local.k8s_deploy_name}-app"
+        app = "${var.k8s_deploy_name}-app"
       }
     }
     template {
       metadata {
         labels = {
-          app = "${local.k8s_deploy_name}-app"
+          app = "${var.k8s_deploy_name}-app"
         }
       }
       spec {
@@ -64,17 +64,19 @@ resource "kubernetes_deployment" "bxr_app" {
         }
         container {
           image = "gcr.io/ping-gte/bxrterraform:latest"
-          name  = "${local.k8s_deploy_name}-app"
+          name  = "${var.k8s_deploy_name}-app"
 
           env {
             # OAuth client redirect URI & App launch URL
             name  = "REACT_APP_HOST"
-            value = "${local.k8s_deploy_name}.ping-devops.com"
+            value = "${var.k8s_deploy_name}.ping-devops.com"
           }
           env {
             # The PingOne host for authN API calls
+            # Note: For this demo, we're proxying the calls to avoid CORS
+            # Typically you'd resolve this with a P1 Custom Domain
             name  = "REACT_APP_AUTHPATH"
-            value = "${local.k8s_deploy_name}.ping-devops.com"
+            value = "https://apps.facile.pingidentity.cloud/pingauth"
           }
           env {
             # P1 Environment ID
@@ -101,11 +103,11 @@ resource "kubernetes_deployment" "bxr_app" {
 resource "kubernetes_service" "bxr_app" {
   metadata {
     namespace = var.namespace
-    name      = "${local.k8s_deploy_name}-app-service"
+    name      = "${var.k8s_deploy_name}-app-service"
   }
   spec {
     selector = {
-      app = "${local.k8s_deploy_name}-app"
+      app = "${var.k8s_deploy_name}-app"
     }
     session_affinity = "ClientIP"
     port {

@@ -8,6 +8,11 @@ variable "organization_id" {
   description = "Your P1 Organization ID"
 }
 
+variable "license_name" {
+  type = string
+  description = "Name of the P1 license you want to assign to the Environment"
+}
+
 variable "admin_env_id" {
   type        = string
   description = "P1 Environment containing the Worker App"
@@ -43,12 +48,9 @@ variable "env_type" {
   description = "Environment Type (Dev | QA | Prod)"
 }
 
-locals {
-  deploy_name="${lower(var.deploy_name)}-${lower(var.env_type)}"
-}
-
-locals {
-  k8s_deploy_name=replace(local.deploy_name, " ", "")
+variable "k8s_deploy_name" {
+  type = string
+  description = "Name used in the K8s deployment of the App. Used in Deployment \\ Service \\ Ingress delivery"
 }
 
 locals {
