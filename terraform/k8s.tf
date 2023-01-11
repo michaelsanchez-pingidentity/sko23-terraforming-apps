@@ -65,6 +65,7 @@ resource "kubernetes_deployment" "bxr_app" {
         container {
           image = "gcr.io/ping-gte/bxrterraform:latest"
           name  = "${var.k8s_deploy_name}-app"
+          image_pull_policy = "Always"
 
           env {
             # OAuth client redirect URI & App launch URL
