@@ -23,7 +23,7 @@ Create a `terraform.tfvars` file with the following:
 region = "{{ NorthAmerica | Canada | Asia | Europe }}"
 organization_id = “{{orgId}}”
 admin_env_id = “{{adminEnvId}}“
-admin_user_id = "{{adminUserId}}
+admin_user_id = "{{adminUserId}}"
 worker_id = “{{workerId}}“
 worker_secret = “{{workerSecret}}“
 deploy_name = "SKO2023 - BXRTerraform"
