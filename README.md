@@ -21,11 +21,11 @@ Create a `terraform.tfvars` file with the following:
 
 ```hcl
 region = "{{ NorthAmerica | Canada | Asia | Europe }}"
-organization_id = “{{orgId}}”
-admin_env_id = “{{adminEnvId}}“
+organization_id = "{{orgId}}"
+admin_env_id = "{{adminEnvId}}"
 admin_user_id = "{{adminUserId}}"
-worker_id = “{{workerId}}“
-worker_secret = “{{workerSecret}}“
+worker_id = "{{workerId}}"
+worker_secret = "{{workerSecret}}"
 deploy_name = "SKO2023 - BXRTerraform"
 namespace = "{{k8s namespace}}"
 env_type = "dev"
