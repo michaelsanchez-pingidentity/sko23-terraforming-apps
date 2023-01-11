@@ -19,4 +19,24 @@ The HCL contains resources for PingOne and for k8s. K8s is used to deploy the ap
 
 Create a `terraform.tfvars` file with the following:
 
+```hcl
+region = "{{ NorthAmerica | Canada | Asia | Europe }}"
+organization_id = “{{orgId}}”
+admin_env_id = “{{adminEnvId}}“
+admin_user_id = "{{adminUserId}}
+worker_id = “{{workerId}}“
+worker_secret = “{{workerSecret}}“
+deploy_name = "SKO2023 - BXRTerraform"
+namespace = "{{k8s namespace}}"
+env_type = "dev"
+```
 
+#### Deployment
+
+At a command line:
+
+```zsh
+terraform init
+terraform plan
+terraform apply —auto-approve
+```
