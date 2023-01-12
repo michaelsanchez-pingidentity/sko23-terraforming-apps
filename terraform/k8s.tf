@@ -19,9 +19,31 @@ resource "kubernetes_ingress_v1" "package_ingress" {
           path = "/"
           backend {
             service {
-              name = "${var.k8s_deploy_name}-app-service"
+              name = "${var.k8s_deploy_name}-app"
               port {
                 number = 5000
+              }
+            }
+          }
+        }
+        path {
+          path = "/auth/"
+          backend {
+            service {
+              name = "${var.k8s_deploy_name}-proxy"
+              port {
+                number = 4000
+              }
+            }
+          }
+        }
+        path {
+          path = "/user/"
+          backend {
+            service {
+              name = "${var.k8s_deploy_name}-proxy"
+              port {
+                number = 4000
               }
             }
           }
@@ -32,6 +54,110 @@ resource "kubernetes_ingress_v1" "package_ingress" {
     tls {
       hosts = ["${var.k8s_deploy_name}.ping-devops.com"]
     }
+  }
+}
+
+resource "kubernetes_ingress_v1" "package_proxy_ingress" {
+  metadata {
+    namespace = var.namespace
+    name      = "${var.k8s_deploy_name}-proxy"
+    annotations = {
+      "kubernetes.io/ingress.class"                    = "nginx-public"
+      "nginx.ingress.kubernetes.io/backend-protocol"   = "HTTP"
+      "nginx.ingress.kubernetes.io/cors-allow-headers" = "X-Forwarded-For"
+      "nginx.ingress.kubernetes.io/force-ssl-redirect" = true
+      "nginx.ingress.kubernetes.io/service-upstream"   = true
+    }
+  }
+
+  spec {
+    default_backend {
+      service {
+        name = "${var.k8s_deploy_name}-proxy"
+        port {
+          number = 4000
+        }
+      }
+    }
+    rule {
+      host = "${var.k8s_deploy_name}-proxy.ping-devops.com"
+      # http {
+      #   path {
+      #     path = "/"
+      #     path_type = "Prefix"
+      #     backend {
+      #       service {
+      #         name = "${var.k8s_deploy_name}-proxy"
+      #         port {
+      #           number = 4000
+      #         }
+      #       }
+      #     }
+      #   }
+      # }
+    }
+
+    tls {
+      hosts = ["${var.k8s_deploy_name}-proxy.ping-devops.com"]
+    }
+  }
+}
+
+resource "kubernetes_deployment" "app_proxy" {
+  metadata {
+    namespace = var.namespace
+    name      = "${var.k8s_deploy_name}-proxy"
+    labels = {
+      "app.kubernetes.io/name"       = "${var.k8s_deploy_name}-proxy",
+      "app.kubernetes.io/instance"   = "${var.k8s_deploy_name}-proxy",
+      "app.kubernetes.io/managed-by" = "${var.k8s_deploy_name}-proxy"
+    }
+  }
+  spec {
+    replicas = 1
+    selector {
+      match_labels = {
+        app = "${var.k8s_deploy_name}-proxy"
+      }
+    }
+    template {
+      metadata {
+        labels = {
+          app = "${var.k8s_deploy_name}-proxy"
+        }
+      }
+      spec {
+        container {
+          image = "docker.io/pricecs/ping-integration-proxy:0.0.6"
+          name  = "${var.k8s_deploy_name}-proxy"
+          image_pull_policy = "Always"
+          port {
+            container_port = 4000
+          }
+        }
+        
+
+      }
+    }
+  }
+}
+
+resource "kubernetes_service" "app_proxy" {
+  metadata {
+    namespace = var.namespace
+    name      = "${var.k8s_deploy_name}-proxy"
+  }
+  spec {
+    selector = {
+      app = "${var.k8s_deploy_name}-proxy"
+    }
+    session_affinity = "ClientIP"
+    port {
+      port        = 4000
+      target_port = 4000
+    }
+
+    type = "ClusterIP"
   }
 }
 
@@ -77,7 +203,7 @@ resource "kubernetes_deployment" "bxr_app" {
             # Note: For this demo, we're proxying the calls to avoid CORS
             # Typically you'd resolve this with a P1 Custom Domain
             name  = "REACT_APP_AUTHPATH"
-            value = "https://apps.facile.pingidentity.cloud/pingauth"
+            value = "${var.k8s_deploy_name}-proxy.ping-devops.com"
           }
           env {
             # P1 Environment ID
@@ -104,7 +230,7 @@ resource "kubernetes_deployment" "bxr_app" {
 resource "kubernetes_service" "bxr_app" {
   metadata {
     namespace = var.namespace
-    name      = "${var.k8s_deploy_name}-app-service"
+    name      = "${var.k8s_deploy_name}-app"
   }
   spec {
     selector = {
