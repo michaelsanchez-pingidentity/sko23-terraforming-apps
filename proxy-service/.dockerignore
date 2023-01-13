@@ -56,6 +56,3 @@ yarn-error.log*
 .dockerignore
 Dockerfile
 Dockerfile*.*
-Jenkinsfile
-Jenkinsfile*.*
-/jenkins

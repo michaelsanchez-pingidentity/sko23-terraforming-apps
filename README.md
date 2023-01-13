@@ -4,12 +4,13 @@
 
 ## Packaging
 
-This repo contains all the necessary code to both configure and demonstrate a single Use Case of an application integration.
+This repo contains all the necessary code to both configure and demonstrate a single Use Case of a Ping integrated application.
 
-Everything needed for this is contained in this repo:
+Everything needed for this demonstration is contained in this repo:
 
 `/terraform` -- contains the HCL to deploy everything
 `/app` -- contains the application source and Dockerfile used to demonstrate the configuration
+`/proxy-service` -- contains the source of a Fastify proxy used to provide server-side support for the App
 
 ### Terraform
 
@@ -65,10 +66,11 @@ terraform init
 terraform plan
 ```
 
-If the plan fails - check your `terraform.tfvars` values. 
+If the plan fails - check your `terraform.tfvars` values.
 
 If the plan succeeds:
 
 ```hcl
 terraform apply —auto-approve
 ````
+
