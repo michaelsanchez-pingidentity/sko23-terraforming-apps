@@ -1,7 +1,7 @@
 resource "kubernetes_ingress_v1" "package_ingress" {
   metadata {
     namespace = var.namespace
-    name      = "${var.k8s_deploy_name}-ingress"
+    name      = "${var.k8s_deploy_name}-app"
     annotations = {
       "kubernetes.io/ingress.class"                    = "nginx-public"
       "nginx.ingress.kubernetes.io/backend-protocol"   = "HTTPS"
@@ -22,28 +22,6 @@ resource "kubernetes_ingress_v1" "package_ingress" {
               name = "${var.k8s_deploy_name}-app"
               port {
                 number = 5000
-              }
-            }
-          }
-        }
-        path {
-          path = "/auth/"
-          backend {
-            service {
-              name = "${var.k8s_deploy_name}-proxy"
-              port {
-                number = 4000
-              }
-            }
-          }
-        }
-        path {
-          path = "/user/"
-          backend {
-            service {
-              name = "${var.k8s_deploy_name}-proxy"
-              port {
-                number = 4000
               }
             }
           }
@@ -81,20 +59,6 @@ resource "kubernetes_ingress_v1" "package_proxy_ingress" {
     }
     rule {
       host = "${var.k8s_deploy_name}-proxy.ping-devops.com"
-      # http {
-      #   path {
-      #     path = "/"
-      #     path_type = "Prefix"
-      #     backend {
-      #       service {
-      #         name = "${var.k8s_deploy_name}-proxy"
-      #         port {
-      #           number = 4000
-      #         }
-      #       }
-      #     }
-      #   }
-      # }
     }
 
     tls {
@@ -135,8 +99,6 @@ resource "kubernetes_deployment" "app_proxy" {
             container_port = 4000
           }
         }
-        
-
       }
     }
   }
@@ -189,7 +151,7 @@ resource "kubernetes_deployment" "bxr_app" {
           name = "gcr-pull-secret"
         }
         container {
-          image = "gcr.io/ping-gte/bxrterraform:latest"
+          image = "gcr.io/ping-gte/bxrterraform:231201-0.1"
           name  = "${var.k8s_deploy_name}-app"
           image_pull_policy = "Always"
 
