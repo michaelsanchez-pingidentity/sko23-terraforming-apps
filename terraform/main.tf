@@ -2,7 +2,7 @@ module "environment" {
   source  = "terraform-pingidentity-modules/environment/pingone"
   version = "0.0.12"
 
-  target_environment_name = var.deploy_name
+  target_environment_name = var.env_name
 
   admin_user_assign_environment_admin_role = false
   admin_user_assign_identity_admin_role = true
@@ -39,7 +39,7 @@ resource "pingone_application" "bxr_logon" {
     grant_types                 = ["AUTHORIZATION_CODE", "IMPLICIT"]
     response_types              = ["CODE", "TOKEN", "ID_TOKEN"]
     token_endpoint_authn_method = "NONE"
-    redirect_uris = [ "${local.app_url}/app" ]
+    redirect_uris = [ "${local.app_url}/" ]
   }
 }
 

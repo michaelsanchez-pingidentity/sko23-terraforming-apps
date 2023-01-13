@@ -1,6 +1,6 @@
 resource "kubernetes_ingress_v1" "package_ingress" {
   metadata {
-    namespace = var.namespace
+    namespace = var.k8s_namespace
     name      = "${var.k8s_deploy_name}-app"
     annotations = {
       "kubernetes.io/ingress.class"                    = "nginx-public"
@@ -13,7 +13,7 @@ resource "kubernetes_ingress_v1" "package_ingress" {
 
   spec {
     rule {
-      host = "${var.k8s_deploy_name}.ping-devops.com"
+      host = "${var.k8s_deploy_name}.${var.k8s_deploy_domain}"
       http {
         path {
           path = "/"
@@ -30,14 +30,14 @@ resource "kubernetes_ingress_v1" "package_ingress" {
     }
 
     tls {
-      hosts = ["${var.k8s_deploy_name}.ping-devops.com"]
+      hosts = ["${var.k8s_deploy_name}.${var.k8s_deploy_domain}"]
     }
   }
 }
 
 resource "kubernetes_ingress_v1" "package_proxy_ingress" {
   metadata {
-    namespace = var.namespace
+    namespace = var.k8s_namespace
     name      = "${var.k8s_deploy_name}-proxy"
     annotations = {
       "kubernetes.io/ingress.class"                    = "nginx-public"
@@ -58,18 +58,18 @@ resource "kubernetes_ingress_v1" "package_proxy_ingress" {
       }
     }
     rule {
-      host = "${var.k8s_deploy_name}-proxy.ping-devops.com"
+      host = "${var.k8s_deploy_name}-proxy.${var.k8s_deploy_domain}"
     }
 
     tls {
-      hosts = ["${var.k8s_deploy_name}-proxy.ping-devops.com"]
+      hosts = ["${var.k8s_deploy_name}-proxy.${var.k8s_deploy_domain}"]
     }
   }
 }
 
 resource "kubernetes_deployment" "app_proxy" {
   metadata {
-    namespace = var.namespace
+    namespace = var.k8s_namespace
     name      = "${var.k8s_deploy_name}-proxy"
     labels = {
       "app.kubernetes.io/name"       = "${var.k8s_deploy_name}-proxy",
@@ -92,7 +92,7 @@ resource "kubernetes_deployment" "app_proxy" {
       }
       spec {
         container {
-          image = "docker.io/pricecs/ping-integration-proxy:0.0.6"
+          image = "${var.proxy_image_name}"
           name  = "${var.k8s_deploy_name}-proxy"
           image_pull_policy = "Always"
           port {
@@ -106,7 +106,7 @@ resource "kubernetes_deployment" "app_proxy" {
 
 resource "kubernetes_service" "app_proxy" {
   metadata {
-    namespace = var.namespace
+    namespace = var.k8s_namespace
     name      = "${var.k8s_deploy_name}-proxy"
   }
   spec {
@@ -125,7 +125,7 @@ resource "kubernetes_service" "app_proxy" {
 
 resource "kubernetes_deployment" "bxr_app" {
   metadata {
-    namespace = var.namespace
+    namespace = var.k8s_namespace
     name      = "${var.k8s_deploy_name}-app"
     labels = {
       "app.kubernetes.io/name"       = "${var.k8s_deploy_name}-app",
@@ -151,21 +151,21 @@ resource "kubernetes_deployment" "bxr_app" {
           name = "gcr-pull-secret"
         }
         container {
-          image = "gcr.io/ping-gte/bxrterraform:231201-0.1"
+          image = "${var.app_image_name}"
           name  = "${var.k8s_deploy_name}-app"
           image_pull_policy = "Always"
 
           env {
             # OAuth client redirect URI & App launch URL
             name  = "REACT_APP_HOST"
-            value = "${var.k8s_deploy_name}.ping-devops.com"
+            value = "${var.k8s_deploy_name}.${var.k8s_deploy_domain}"
           }
           env {
             # The PingOne host for authN API calls
             # Note: For this demo, we're proxying the calls to avoid CORS
             # Typically you'd resolve this with a P1 Custom Domain
             name  = "REACT_APP_AUTHPATH"
-            value = "${var.k8s_deploy_name}-proxy.ping-devops.com"
+            value = "${var.k8s_deploy_name}-proxy.${var.k8s_deploy_domain}"
           }
           env {
             # P1 Environment ID
@@ -191,7 +191,7 @@ resource "kubernetes_deployment" "bxr_app" {
 
 resource "kubernetes_service" "bxr_app" {
   metadata {
-    namespace = var.namespace
+    namespace = var.k8s_namespace
     name      = "${var.k8s_deploy_name}-app"
   }
   spec {
