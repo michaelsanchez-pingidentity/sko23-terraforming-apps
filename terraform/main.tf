@@ -28,11 +28,42 @@ provider "pingone" {
   force_delete_production_type = false
 }
 
+resource "pingone_population" "app" {
+  environment_id = module.environment.environment_id
+
+  name        = "Application Users"
+  description = "Population containing App Users"
+}
+
+# PingOne Sign-On Policy
+resource "pingone_sign_on_policy" "app_logon" {
+  environment_id = module.environment.environment_id
+
+  name        = "App_Logon"
+  description = "Simple Login with Registration"
+}
+
+resource "pingone_sign_on_policy_action" "app_logon_first" {
+  environment_id    = module.environment.environment_id
+  sign_on_policy_id = pingone_sign_on_policy.app_logon.id
+
+  registration_local_population_id = pingone_population.app.id
+
+  priority = 1
+
+  conditions {
+    last_sign_on_older_than_seconds = 3600 // 1 Hour
+  }
+
+  login {
+    recovery_enabled = true
+  }
+}
+
 resource "pingone_application" "bxr_logon" {
   environment_id = module.environment.environment_id
   enabled        = true
   name           = "BXR - Logon"
-  # login_page_url = "${local.app_url}/app"
 
   oidc_options {
     type                        = "NATIVE_APP"
@@ -113,4 +144,13 @@ resource "pingone_application_resource_grant" "bxr_login_pingone" {
     data.pingone_resource_scope.pingone_update_user.id,
     data.pingone_resource_scope.pingone_read_sessions.id
   ]
+}
+
+resource "pingone_application_sign_on_policy_assignment" "app_logon" {
+  environment_id = module.environment.environment_id
+  application_id = pingone_application.bxr_logon.id
+
+  sign_on_policy_id = pingone_sign_on_policy.app_logon.id
+
+  priority = 1
 }
