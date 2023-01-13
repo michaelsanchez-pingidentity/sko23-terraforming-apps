@@ -32,7 +32,7 @@ resource "pingone_application" "bxr_logon" {
   environment_id = module.environment.environment_id
   enabled        = true
   name           = "BXR - Logon"
-  login_page_url = "${local.app_url}/app"
+  # login_page_url = "${local.app_url}/app"
 
   oidc_options {
     type                        = "NATIVE_APP"

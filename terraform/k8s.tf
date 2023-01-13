@@ -158,14 +158,14 @@ resource "kubernetes_deployment" "bxr_app" {
           env {
             # OAuth client redirect URI & App launch URL
             name  = "REACT_APP_HOST"
-            value = "${var.k8s_deploy_name}.${var.k8s_deploy_domain}"
+            value = "https://${var.k8s_deploy_name}.${var.k8s_deploy_domain}"
           }
           env {
             # The PingOne host for authN API calls
             # Note: For this demo, we're proxying the calls to avoid CORS
             # Typically you'd resolve this with a P1 Custom Domain
             name  = "REACT_APP_AUTHPATH"
-            value = "${var.k8s_deploy_name}-proxy.${var.k8s_deploy_domain}"
+            value = "https://${var.k8s_deploy_name}-proxy.${var.k8s_deploy_domain}"
           }
           env {
             # P1 Environment ID
