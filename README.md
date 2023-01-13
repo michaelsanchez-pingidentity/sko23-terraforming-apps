@@ -8,8 +8,8 @@ This repo contains all the necessary code to both configure and demonstrate a si
 
 Everything needed for this demonstration is contained in this repo:
 
-`/terraform` -- contains the HCL to deploy everything
-`/app` -- contains the application source and Dockerfile used to demonstrate the configuration
+`/terraform` -- contains the HCL to deploy everything  
+`/app` -- contains the application source and Dockerfile used to demonstrate the configuration  
 `/proxy-service` -- contains the source of a Fastify proxy used to provide server-side support for the App
 
 ### Terraform
