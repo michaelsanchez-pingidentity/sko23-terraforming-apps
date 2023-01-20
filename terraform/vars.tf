@@ -69,5 +69,12 @@ variable "app_image_name" {
 }
 
 locals {
+  # The URL of the demo app
   app_url="https://${kubernetes_ingress_v1.package_ingress.spec[0].rule[0].host}"
+  # Translate the Region to a Domain suffix
+  north_america = "${var.region == "NorthAmerica" ? "com" : ""}"
+  europe = "${var.region == "Europe" ? "eu" : ""}"
+  canada = "${var.region == "Canada" ? "ca" : ""}"
+  asia_pacific = "${var.region == "AsiaPacific" ? "asia" : ""}"
+  pingone_domain = "${coalesce(local.north_america, local.europe, local.canada, local.asia_pacific)}"
 }

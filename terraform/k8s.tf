@@ -182,6 +182,11 @@ resource "kubernetes_deployment" "bxr_app" {
             name  = "REACT_APP_RECSET"
             value = pingone_application.bxr_logon.oidc_options[0].client_secret
           }
+          env {
+            # P1 Auth URL (accounts for Region)
+            name = "REACT_APP_P1HOST"
+            value = "https://auth.pingone.${local.pingone_domain}"
+          }
         }
 
       }
