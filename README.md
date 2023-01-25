@@ -2,6 +2,13 @@
 
  Terraform for the SKO Terraform Advanced session
 
+## Pre-requisites
+
+You must have an account in the ping-devops EKS cluster. All SAs already have this.
+
+If you don't have one, you must submit a Jira ticket.
+
+
 ## Packaging
 
 This repo contains all the necessary code to both configure and demonstrate a single Use Case of a Ping integrated application.
