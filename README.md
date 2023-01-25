@@ -2,6 +2,13 @@
 
  Terraform for the SKO Terraform Advanced session
 
+## Pre-requisites
+
+You must have an account in the ping-devops EKS cluster. All SAs already have this.
+
+If you don't have one, you must submit a Jira ticket.
+
+
 ## Packaging
 
 This repo contains all the necessary code to both configure and demonstrate a single Use Case of a Ping integrated application.
@@ -54,16 +61,15 @@ k8s_deploy_name = "{{Name used for K8s deployment and host name}}"
 k8s_deploy_domain="ping-devops.com OR ping-partners.com"
 k8s_namespace = "{{your k8s namespace}}"
 proxy_image_name="docker.io/pricecs/ping-integration-proxy:0.0.9"
-app_image_name="gcr.io/ping-gte/bxrterraform:202301-1.9"
+app_image_name="docker.io/michaelspingidentity/bxrterraform:202301-1.9"
 env_type = "dev"
-license_name="INTERNAL"
 ```
 
 #### Deployment
 
 At a command line:
 
-```zsh
+```initialize and plan the deploy.
 terraform init
 terraform plan
 ```
@@ -72,7 +78,7 @@ If the plan fails - check your `terraform.tfvars` values.
 
 If the plan succeeds:
 
-```hcl
+```Apply the plan to deploy.
 terraform apply —auto-approve
 ````
 
