@@ -50,12 +50,13 @@ license_name = "{{License name to put on new Env}}"
 worker_id = "{{workerId}}"
 worker_secret = "{{workerSecret}}"
 env_name = "SKO2023 - BXRTerraform"
-k8s_deploy_name = "{{Name used for K8s deployment}}"
-k8s_deploy_domain="ping-devops.com"
-k8s_namespace = "{{k8s namespace}}"
+k8s_deploy_name = "{{Name used for K8s deployment and host name}}"
+k8s_deploy_domain="ping-devops.com OR ping-partners.com"
+k8s_namespace = "{{your k8s namespace}}"
 proxy_image_name="docker.io/pricecs/ping-integration-proxy:0.0.9"
-app_image_name="gcr.io/ping-gte/bxrterraform:231201-0.12"
+app_image_name="gcr.io/ping-gte/bxrterraform:202301-1.9"
 env_type = "dev"
+license_name="INTERNAL"
 ```
 
 #### Deployment
