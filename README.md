@@ -1,12 +1,14 @@
-# SKO2023-Terraform-Advanced
+# SKO2023 Terraform Advanced
 
- Terraform for the SKO Terraform Advanced session
+ Lab exercise for the SKO Terraform Advanced session. This lab is about using Terraform to deploy a custom app and dynamically configure it at container start up to work with your newly provisioned PingOne environment. 
+
 
 ## Pre-requisites
 
-You must have an account in the ping-devops EKS cluster. All SAs already have this.
+You must have an account in the ping-devops AWS EKS cluster. All SAs already have this.
 
-If you don't have one, you must submit a Jira ticket.
+If you don't have one, you must submit a Jira ticket. Project = "Developer Support (DEVHELP). Issue Type = "Task".
+Talk to your team leader if you need assistance.
 
 
 ## Packaging
@@ -38,8 +40,8 @@ This is what the HCL will create
 
 | Provider | Resource | Description |
 | --- | --- | --- |
-| PingOne | Environment | Contains all the P1 configuration for the app |
-| PingOne | Application | OIDC App used by the app |
+| PingOne | Environment | Contains all the P1 configuration for the app. |
+| PingOne | Application | OIDC client used by the custom app. |
 | PingOne | Resource Grant | Assigns resources \ scopes to the OIDC App |
 
 
