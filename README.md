@@ -64,7 +64,7 @@ k8s_deploy_name = "{{Name used for K8s deployment and host name}}"
 k8s_deploy_domain="ping-devops.com OR ping-partners.com"
 k8s_namespace = "{{your k8s namespace}}"
 proxy_image_name="docker.io/pricecs/ping-integration-proxy:0.0.9"
-app_image_name="app_image_name="docker.io/michaelspingidentity/bxrterraform:202302-1.33.1"
+app_image_name="docker.io/michaelspingidentity/bxrterraform:202302-1.33.1"
 env_type = "dev"
 ```
 
