@@ -1,0 +1,16 @@
+window._env_ = {
+  REACT_APP_IMAGE_NAME: "xxxxxxx",
+  PUBLIC_URL: "/app",
+  REACT_APP_HOST: "https://demo.bxretail.local",
+  REACT_APP_P1HOST: "https://auth.pingone.com",
+  REACT_APP_AUTHPATH: "https://auth.pingone.com",
+  REACT_APP_ENVID: "xyxyxyxy",
+  REACT_APP_CLIENT: "xxxxxxx",
+  REACT_APP_RECSET: "yyyyyyy",
+  REACT_APP_USER_SCOPES: "p1:read:user p1:update:user p1:read:sessions email profile openid",
+  PORT: "5000",
+  HTTPS: "true",
+  GENERATE_SOURCEMAP: "false",
+  CHOKIDAR_USEPOLLING: "true",
+  SKIP_PREFLIGHT_CHECK: "true",
+}

@@ -17,9 +17,10 @@ This repo contains all the necessary code to both configure and demonstrate a si
 
 Everything needed for this demonstration is contained in this repo:
 
-`/terraform` -- contains the HCL to deploy everything  
-`/app` -- contains the application source and Dockerfile used to demonstrate the configuration  
-`/proxy-service` -- contains the source of a Fastify proxy used to provide server-side support for the App
+`/terraform` -- contains the HCL to deploy all the things.
+`/app` -- For reference, contains the application source and Dockerfile used to demonstrate the configuration.
+`/app/bxretail-Terraform-SKO/documentation` -- Contains JSDocs generated documentation. Just double click the index.html file.
+`/proxy-service` -- contains the source of a Fastify proxy used to provide server-side support for the app's API calls to PingOne user API.
 
 ### Terraform
 
@@ -63,7 +64,7 @@ k8s_deploy_name = "{{Name used for K8s deployment and host name}}"
 k8s_deploy_domain="ping-devops.com OR ping-partners.com"
 k8s_namespace = "{{your k8s namespace}}"
 proxy_image_name="docker.io/pricecs/ping-integration-proxy:0.0.9"
-app_image_name="docker.io/michaelspingidentity/bxrterraform:202301-1.9"
+app_image_name="app_image_name="docker.io/michaelspingidentity/bxrterraform:202302-1.33.1"
 env_type = "dev"
 ```
 
