@@ -13,7 +13,7 @@ fastify.register(import('@fastify/http-proxy'), {
 
 //Proxy calls to the PingOne User API
 fastify.register(import('@fastify/http-proxy'), {
-    upstream: 'https://api.pingone.com/v1/environments/',
+    upstream: 'https://api.pingone.com/v1/environments',
     prefix: '/user', // optional
     http2: false // optional
 })

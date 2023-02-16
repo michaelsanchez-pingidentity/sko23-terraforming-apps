@@ -1,12 +1,14 @@
-# SKO2023-Terraform-Advanced
+# SKO2023 Terraform Advanced
 
- Terraform for the SKO Terraform Advanced session
+ Lab exercise for the SKO Terraform Advanced session. This lab is about using Terraform to deploy a custom app and dynamically configure it at container start up to work with your newly provisioned PingOne environment. 
+
 
 ## Pre-requisites
 
-You must have an account in the ping-devops EKS cluster. All SAs already have this.
+You must have an account in the ping-devops AWS EKS cluster. All SAs already have this.
 
-If you don't have one, you must submit a Jira ticket.
+If you don't have one, you must submit a Jira ticket. Project = "Developer Support (DEVHELP). Issue Type = "Task".
+Talk to your team leader if you need assistance.
 
 
 ## Packaging
@@ -15,9 +17,10 @@ This repo contains all the necessary code to both configure and demonstrate a si
 
 Everything needed for this demonstration is contained in this repo:
 
-`/terraform` -- contains the HCL to deploy everything  
-`/app` -- contains the application source and Dockerfile used to demonstrate the configuration  
-`/proxy-service` -- contains the source of a Fastify proxy used to provide server-side support for the App
+`/terraform` -- contains the HCL to deploy all the things.
+`/app` -- For reference, contains the application source and Dockerfile used to demonstrate the configuration.
+`/app/bxretail-Terraform-SKO/documentation` -- Contains JSDocs generated documentation. Just double click the index.html file.
+`/proxy-service` -- contains the source of a Fastify proxy used to provide server-side support for the app's API calls to PingOne user API.
 
 ### Terraform
 
@@ -38,8 +41,8 @@ This is what the HCL will create
 
 | Provider | Resource | Description |
 | --- | --- | --- |
-| PingOne | Environment | Contains all the P1 configuration for the app |
-| PingOne | Application | OIDC App used by the app |
+| PingOne | Environment | Contains all the P1 configuration for the app. |
+| PingOne | Application | OIDC client used by the custom app. |
 | PingOne | Resource Grant | Assigns resources \ scopes to the OIDC App |
 
 
@@ -61,7 +64,7 @@ k8s_deploy_name = "{{Name used for K8s deployment and host name}}"
 k8s_deploy_domain="ping-devops.com OR ping-partners.com"
 k8s_namespace = "{{your k8s namespace}}"
 proxy_image_name="docker.io/pricecs/ping-integration-proxy:0.0.9"
-app_image_name="docker.io/michaelspingidentity/bxrterraform:202301-1.9"
+app_image_name="app_image_name="docker.io/michaelspingidentity/bxrterraform:202302-1.33.1"
 env_type = "dev"
 ```
 
