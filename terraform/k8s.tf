@@ -187,6 +187,12 @@ resource "kubernetes_deployment" "bxr_app" {
             name = "REACT_APP_P1HOST"
             value = "https://auth.pingone.${local.pingone_domain}"
           }
+          env {
+            # The Docker image name just for validation/troubleshooting.
+            name = "REACT_APP_IMAGE_NAME"
+            value = "${var.app_image_name}"
+              
+            }
         }
 
       }

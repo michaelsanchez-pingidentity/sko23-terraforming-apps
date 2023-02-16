@@ -36,3 +36,4 @@ override.tf.json
 terraform.rc
 *.hcl
 
+build_push_terraform.txt
